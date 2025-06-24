@@ -164,6 +164,31 @@ public class LifeRecordManager {
     }
 
     /**
+     * Edits an existing life record.
+     * @param index The 1-based index of the record to edit.
+     * @param newTitle The new title for the record.
+     * @param newContent The new content for the record.
+     * @param newCategory The new category for the record.
+     * @param newMood The new mood for the record.
+     * @return true if the record was successfully edited, false otherwise.
+     */
+    public boolean editRecord(int index, String newTitle, String newContent, String newCategory, String newMood) {
+        if (index > 0 && index <= records.size()) {
+            LifeRecord recordToEdit = records.get(index - 1);
+            recordToEdit.setTitle(newTitle);
+            recordToEdit.setContent(newContent);
+            recordToEdit.setCategory(newCategory);
+            recordToEdit.setMood(newMood);
+            recordToEdit.setTimestamp(LocalDateTime.now()); // Update timestamp to reflect edit time
+            rewriteFile(); // Save changes to file by rewriting the whole file
+            return true;
+        } else {
+            System.out.println("Invalid record number. Cannot edit record.");
+            return false;
+        }
+    }
+
+    /**
      * Deletes a record by its index (1-based).
      * @param index The 1-based index of the record to delete.
      * @return true if the record was deleted, false otherwise.
