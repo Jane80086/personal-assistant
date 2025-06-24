@@ -58,11 +58,11 @@ public class LifeRecord {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return "----------------------------------------\n" +
-                "Title: " + title + "\n" +
-                "Category: " + category + "\n" +
-                "Mood: " + mood + "\n" +
-                "Timestamp: " + timestamp.format(formatter) + "\n" +
-                "Content:\n" + content + "\n" +
+                "标题: " + title + "\n" +
+                "分类: " + category + "\n" +
+                "心情: " + mood + "\n" +
+                "时间戳: " + timestamp.format(formatter) + "\n" +
+                "内容:\n" + content + "\n" +
                 "----------------------------------------";
     }
 

@@ -18,14 +18,12 @@ public class LifeRecordManager {
     private static final String FILE_NAME = "life_records.txt";
     private static final String FILE_PATH = DATA_DIR + "/" + FILE_NAME;
 
-    // 预定义的分类列表
     private static final List<String> CATEGORIES = Arrays.asList(
-            "Daily Log", "Memories", "Events", "Work", "Study", "Health", "Travel", "Family", "Friends", "Hobbies"
+            "日常", "回忆", "事件", "工作", "学习", "健康", "旅行", "家庭", "朋友", "爱好"
     );
 
-    // 预定义的心情列表
     private static final List<String> MOODS = Arrays.asList(
-            "😊 Happy", "😢 Sad", "😤 Angry", "😴 Tired", "😎 Excited", "😰 Anxious", "😌 Calm", "🤔 Thoughtful", "😍 Loved", "😕 Confused"
+            "😊 开心", "😢 难过", "😤 生气", "😴 疲惫", "😎 激动", "😰 焦虑", "😌 冷静", "🤔 思考", "😍 恋爱", "😕 困惑"
     );
 
     public LifeRecordManager() {
@@ -34,24 +32,18 @@ public class LifeRecordManager {
         loadRecordsFromFile();
     }
 
-    /**
-     * 创建data目录
-     */
     private void createDataDirectory() {
         try {
             Path dataPath = Paths.get(DATA_DIR);
             if (!Files.exists(dataPath)) {
                 Files.createDirectories(dataPath);
-                System.out.println("Created data directory: " + DATA_DIR);
+                System.out.println("已创建数据文件: " + DATA_DIR);
             }
         } catch (IOException e) {
-            System.err.println("Error creating data directory: " + e.getMessage());
+            System.err.println("错误创建数据文件: " + e.getMessage());
         }
     }
 
-    /**
-     * 从文件加载记录
-     */
     private void loadRecordsFromFile() {
         try {
             Path filePath = Paths.get(FILE_PATH);
@@ -59,33 +51,19 @@ public class LifeRecordManager {
                 List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
                 for (String line : lines) {
                     if (!line.trim().isEmpty()) {
-                        // 解析文件格式: timestamp | category | mood | title | content
-                        // Parse file format: timestamp | category | mood | title | content
                         String[] parts = line.split(" \\| ", 5);
                         if (parts.length == 5) {
-                            // When loading, reconstruct LocalDateTime from string if needed,
-                            // but for now, the LifeRecord constructor sets a new timestamp.
-                            // If you want to preserve original timestamp, you'd parse parts[0]
-                            // and add a constructor that takes LocalDateTime.
                             records.add(new LifeRecord(parts[3], parts[4], parts[1], parts[2]));
                         }
                     }
                 }
-                System.out.println("Loaded " + records.size() + " records from file.");
+                System.out.println("已从文件中加载 " + records.size() + " 条记录.");
             }
         } catch (IOException e) {
-            System.err.println("Error loading records from file: " + e.getMessage());
+            System.err.println("从文件加载记录错误: " + e.getMessage());
         }
     }
 
-    /**
-     * 保存记录到文件
-     * 此方法仅用于添加新记录，因为它使用APPEND模式。
-     * 对于编辑和删除，将使用rewriteFile()方法来完全更新文件。
-     * Saves record to file.
-     * This method is only used for adding new records as it uses APPEND mode.
-     * For editing and deleting, the rewriteFile() method will be used to fully update the file.
-     */
     private void saveRecordToFile(LifeRecord record) {
         try {
             Path filePath = Paths.get(FILE_PATH);
@@ -93,91 +71,47 @@ public class LifeRecordManager {
             Files.writeString(filePath, recordLine, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
-            System.err.println("Error saving record to file: " + e.getMessage());
+            System.err.println("保存记录到文件错误: " + e.getMessage());
         }
     }
 
-    /**
-     * 获取分类列表
-     * Gets the list of categories.
-     */
     public List<String> getCategories() {
         return new ArrayList<>(CATEGORIES);
     }
 
-    /**
-     * 获取心情列表
-     * Gets the list of moods.
-     */
     public List<String> getMoods() {
         return new ArrayList<>(MOODS);
     }
 
-    /**
-     * Adds a new life record.
-     * @param title The title of the record.
-     * @param content The content of the record.
-     * @param category The category of the record.
-     * @param mood The mood of the record.
-     */
     public void addRecord(String title, String content, String category, String mood) {
         LifeRecord record = new LifeRecord(title, content, category, mood);
         records.add(record);
-        saveRecordToFile(record); // Use append for new records
-        System.out.println("Life record added and saved successfully!");
+        saveRecordToFile(record);
+        System.out.println("生活记录添加并保存成功！");
     }
 
-    /**
-     * Searches for records by multiple criteria (title, content, category, mood).
-     * This performs a fuzzy search (contains) for each non-empty keyword and combines
-     * them with an AND logic.
-     * IMPORTANT: This method now *only* performs the search and returns the results.
-     * It no longer prints the search results directly to System.out.
-     * The display of results is now handled by LifeRecordMenu.
-     *
-     * @param titleKeyword Keyword to search in titles (can be null or empty).
-     * @param contentKeyword Keyword to search in content (can be null or empty).
-     * @param categoryKeyword Keyword to search in categories (can be null or empty).
-     * @param moodKeyword Keyword to search in moods (can be null or empty).
-     * @return A list of matching records. Returns an empty list if no records match
-     * or if no search keywords were provided.
-     */
     public List<LifeRecord> searchRecords(String titleKeyword, String contentKeyword, String categoryKeyword, String moodKeyword) {
-        // Normalize keywords for case-insensitive and empty string handling
         String lowerCaseTitleKeyword = (titleKeyword != null && !titleKeyword.trim().isEmpty()) ? titleKeyword.trim().toLowerCase() : null;
         String lowerCaseContentKeyword = (contentKeyword != null && !contentKeyword.trim().isEmpty()) ? contentKeyword.trim().toLowerCase() : null;
         String lowerCaseCategoryKeyword = (categoryKeyword != null && !categoryKeyword.trim().isEmpty()) ? categoryKeyword.trim().toLowerCase() : null;
         String lowerCaseMoodKeyword = (moodKeyword != null && !moodKeyword.trim().isEmpty()) ? moodKeyword.trim().toLowerCase() : null;
 
-        // If all keywords are empty, indicating no search criteria, return an empty list immediately.
-        // The calling class (LifeRecordMenu) will handle the "no input" message.
         if (lowerCaseTitleKeyword == null && lowerCaseContentKeyword == null &&
                 lowerCaseCategoryKeyword == null && lowerCaseMoodKeyword == null) {
             return new ArrayList<>();
         }
 
-        // Directly return the collected list, removing the redundant local variable
         return records.stream()
                 .filter(record -> {
                     boolean matchesTitle = (lowerCaseTitleKeyword == null) || record.getTitle().toLowerCase().contains(lowerCaseTitleKeyword);
                     boolean matchesContent = (lowerCaseContentKeyword == null) || record.getContent().toLowerCase().contains(lowerCaseContentKeyword);
                     boolean matchesCategory = (lowerCaseCategoryKeyword == null) || record.getCategory().toLowerCase().contains(lowerCaseCategoryKeyword);
                     boolean matchesMood = (lowerCaseMoodKeyword == null) || record.getMood().toLowerCase().contains(lowerCaseMoodKeyword);
-                    return matchesTitle && matchesContent && matchesCategory && matchesMood; // AND logic for all conditions
+                    return matchesTitle && matchesContent && matchesCategory && matchesMood;
                 })
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * Edits an existing life record.
-     * @param index The 1-based index of the record to edit.
-     * @param newTitle The new title for the record.
-     * @param newContent The new content for the record.
-     * @param newCategory The new category for the record.
-     * @param newMood The new mood for the record.
-     * @return true if the record was successfully edited, false otherwise.
-     */
     public boolean editRecord(int index, String newTitle, String newContent, String newCategory, String newMood) {
         if (index > 0 && index <= records.size()) {
             LifeRecord recordToEdit = records.get(index - 1);
@@ -185,38 +119,25 @@ public class LifeRecordManager {
             recordToEdit.setContent(newContent);
             recordToEdit.setCategory(newCategory);
             recordToEdit.setMood(newMood);
-            recordToEdit.setTimestamp(LocalDateTime.now()); // Update timestamp to reflect edit time
-            rewriteFile(); // Save changes to file by rewriting the whole file
+            recordToEdit.setTimestamp(LocalDateTime.now());
+            rewriteFile();
             return true;
         } else {
-            System.out.println("Invalid record number. Cannot edit record.");
+            System.out.println("非法数字，无法编辑.");
             return false;
         }
     }
 
-
-    /**
-     * Deletes a record by its index (1-based).
-     * @param index The 1-based index of the record to delete.
-     */
     public void deleteRecord(int index) {
         if (index > 0 && index <= records.size()) {
             records.remove(index - 1);
-            System.out.println("Record #" + index + " deleted successfully.");
-            // 重新写入文件
-            // Rewrite file
+            System.out.println("记录 #" + index + " 删除成功.");
             rewriteFile();
         } else {
-            System.out.println("Invalid record number. Please enter a valid number.");
+            System.out.println("非法记录数字，请输入正确的数字.");
         }
     }
 
-    /**
-     * 重新写入整个文件 - 用于更新(编辑/删除)操作
-     * 此方法会清空文件并写入当前内存中的所有记录。
-     * Rewrites the entire file - used for update (edit/delete) operations.
-     * This method clears the file and writes all current records from memory.
-     */
     public void rewriteFile() {
         try {
             Path filePath = Paths.get(FILE_PATH);
@@ -224,21 +145,14 @@ public class LifeRecordManager {
             for (LifeRecord record : records) {
                 content.append(record.toFileFormat()).append(System.lineSeparator());
             }
-            // 使用TRUNCATE_EXISTING选项清空文件，然后写入新内容
-            // Use TRUNCATE_EXISTING option to clear the file, then write new content
             Files.writeString(filePath, content.toString(), StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-            System.out.println("所有记录已重新写入文件。"); // All records have been rewritten to the file.
+            System.out.println("所有记录已重新写入文件。");
         } catch (IOException e) {
-            System.err.println("Error rewriting file: " + e.getMessage());
+            System.err.println("重写文件错误: " + e.getMessage());
         }
     }
 
-    /**
-     * Retrieves a record by its index (1-based).
-     * @param index The 1-based index of the record.
-     * @return The LifeRecord object if found, null otherwise.
-     */
     public LifeRecord getRecord(int index) {
         if (index > 0 && index <= records.size()) {
             return records.get(index - 1);
@@ -246,10 +160,6 @@ public class LifeRecordManager {
         return null;
     }
 
-    /**
-     * Returns a copy of the list of all life records.
-     * @return A List of LifeRecord objects.
-     */
     public List<LifeRecord> getAllRecords() {
         return new ArrayList<>(records);
     }
