@@ -18,8 +18,8 @@ public class LifeRecordMenu {
         int choice;
         do {
             System.out.println("\n--- 记录生活菜单 ---");
-            System.out.println("1. 添加记录");
-            System.out.println("2. 浏览所有记录"); // Updated menu text for clarity
+            System.out.println("1. 浏览所有记录");
+            System.out.println("2. 添加记录");
             System.out.println("3. 搜索记录");
             System.out.println("4. 编辑记录");
             System.out.println("5. 删除记录");
@@ -30,16 +30,16 @@ public class LifeRecordMenu {
                 choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
                     case 1:
-                        addRecord();
+                        browseRecordsWithDetails();
                         break;
                     case 2:
-                        browseRecordsWithDetails(); // Call the new method for browsing with details
+                        addRecord();
                         break;
                     case 3:
                         searchRecords();
                         break;
                     case 4:
-                        editRecord(); // Call the new editRecord method
+                        editRecord();
                         break;
                     case 5:
                         deleteRecord();
@@ -154,13 +154,19 @@ public class LifeRecordMenu {
      * Handles the user interaction for editing a record.
      */
     private void editRecord() {
-        manager.viewAllRecords(); // Show all records first
-        if (manager.getRecord(1) == null) { // Check if any records exist
+        List<LifeRecord> allRecords = manager.getAllRecords(); // Get all records
+
+        if (allRecords.isEmpty()) {
             System.out.println("没有记录可以编辑。");
-            return;
+            return; // Exit if no records
         }
 
-        System.out.println("输入想要编辑记录的序号 (输入 0 取消): ");
+        System.out.println("\n--- 所有生活记录摘要 (用于编辑) ---");
+        for (int i = 0; i < allRecords.size(); i++) {
+            System.out.println("记录 #" + (i + 1) + ": " + allRecords.get(i).getTitle());
+        }
+        System.out.println("0. 取消编辑");
+        System.out.print("输入想要编辑记录的序号 (输入 0 取消): ");
         try {
             int recordNumber = Integer.parseInt(scanner.nextLine());
 
