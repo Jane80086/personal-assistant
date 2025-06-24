@@ -61,6 +61,7 @@ public class LifeRecordManager {
                 for (String line : lines) {
                     if (!line.trim().isEmpty()) {
                         // 解析文件格式: timestamp | category | mood | title | content
+                        // Parse file format: timestamp | category | mood | title | content
                         String[] parts = line.split(" \\| ", 5);
                         if (parts.length == 5) {
                             // When loading, reconstruct LocalDateTime from string if needed,
@@ -82,6 +83,9 @@ public class LifeRecordManager {
      * 保存记录到文件
      * 此方法仅用于添加新记录，因为它使用APPEND模式。
      * 对于编辑和删除，将使用rewriteFile()方法来完全更新文件。
+     * Saves record to file.
+     * This method is only used for adding new records as it uses APPEND mode.
+     * For editing and deleting, the rewriteFile() method will be used to fully update the file.
      */
     private void saveRecordToFile(LifeRecord record) {
         try {
@@ -96,6 +100,7 @@ public class LifeRecordManager {
 
     /**
      * 获取分类列表
+     * Gets the list of categories.
      */
     public List<String> getCategories() {
         return new ArrayList<>(CATEGORIES);
@@ -103,6 +108,7 @@ public class LifeRecordManager {
 
     /**
      * 获取心情列表
+     * Gets the list of moods.
      */
     public List<String> getMoods() {
         return new ArrayList<>(MOODS);
@@ -141,35 +147,52 @@ public class LifeRecordManager {
     }
 
     /**
-     * Searches for records by title, content, category, or mood.
-     * @param keyword The keyword to search for.
+     * Searches for records by multiple criteria (title, content, category, mood).
+     * This performs a fuzzy search (contains) for each non-empty keyword and combines
+     * them with an AND logic.
+     * @param titleKeyword Keyword to search in titles (can be null or empty).
+     * @param contentKeyword Keyword to search in content (can be null or empty).
+     * @param categoryKeyword Keyword to search in categories (can be null or empty).
+     * @param moodKeyword Keyword to search in moods (can be null or empty).
      * @return A list of matching records.
      */
-    public List<LifeRecord> searchRecords(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) {
-            System.out.println("Search keyword cannot be empty.");
+    public List<LifeRecord> searchRecords(String titleKeyword, String contentKeyword, String categoryKeyword, String moodKeyword) {
+        // Normalize keywords for case-insensitive and empty string handling
+        String lowerCaseTitleKeyword = (titleKeyword != null && !titleKeyword.trim().isEmpty()) ? titleKeyword.trim().toLowerCase() : null;
+        String lowerCaseContentKeyword = (contentKeyword != null && !contentKeyword.trim().isEmpty()) ? contentKeyword.trim().toLowerCase() : null;
+        String lowerCaseCategoryKeyword = (categoryKeyword != null && !categoryKeyword.trim().isEmpty()) ? categoryKeyword.trim().toLowerCase() : null;
+        String lowerCaseMoodKeyword = (moodKeyword != null && !moodKeyword.trim().isEmpty()) ? moodKeyword.trim().toLowerCase() : null;
+
+        // Check if all keywords are empty, indicating no search criteria
+        if (lowerCaseTitleKeyword == null && lowerCaseContentKeyword == null &&
+                lowerCaseCategoryKeyword == null && lowerCaseMoodKeyword == null) {
+            System.out.println("没有输入搜索关键词，请至少输入一个关键词。"); // No search keywords entered, please enter at least one.
             return new ArrayList<>();
         }
-        String lowerCaseKeyword = keyword.toLowerCase();
+
         List<LifeRecord> matchingRecords = records.stream()
-                .filter(record -> record.getTitle().toLowerCase().contains(lowerCaseKeyword) ||
-                        record.getContent().toLowerCase().contains(lowerCaseKeyword) ||
-                        record.getCategory().toLowerCase().contains(lowerCaseKeyword) ||
-                        record.getMood().toLowerCase().contains(lowerCaseKeyword))
+                .filter(record -> {
+                    boolean matchesTitle = (lowerCaseTitleKeyword == null) || record.getTitle().toLowerCase().contains(lowerCaseTitleKeyword);
+                    boolean matchesContent = (lowerCaseContentKeyword == null) || record.getContent().toLowerCase().contains(lowerCaseContentKeyword);
+                    boolean matchesCategory = (lowerCaseCategoryKeyword == null) || record.getCategory().toLowerCase().contains(lowerCaseCategoryKeyword);
+                    boolean matchesMood = (lowerCaseMoodKeyword == null) || record.getMood().toLowerCase().contains(lowerCaseMoodKeyword);
+                    return matchesTitle && matchesContent && matchesCategory && matchesMood; // AND logic for all conditions
+                })
                 .collect(Collectors.toList());
 
         if (matchingRecords.isEmpty()) {
-            System.out.println("No records found matching '" + keyword + "'.");
+            System.out.println("没有找到匹配的记录。"); // No matching records found.
         } else {
-            System.out.println("\n--- Search Results for '" + keyword + "' ---");
+            System.out.println("\n--- 搜索结果 ---"); // --- Search Results ---
             for (int i = 0; i < matchingRecords.size(); i++) {
-                System.out.println("Result #" + (i + 1));
+                System.out.println("结果 #" + (i + 1)); // Result #
                 System.out.println(matchingRecords.get(i));
             }
-            System.out.println("------------------------------------");
+            System.out.println("--------------------");
         }
         return matchingRecords;
     }
+
 
     /**
      * Edits an existing life record.
@@ -207,6 +230,7 @@ public class LifeRecordManager {
             records.remove(index - 1);
             System.out.println("Record #" + index + " deleted successfully.");
             // 重新写入文件
+            // Rewrite file
             rewriteFile();
             return true;
         } else {
@@ -218,6 +242,8 @@ public class LifeRecordManager {
     /**
      * 重新写入整个文件 - 用于更新(编辑/删除)操作
      * 此方法会清空文件并写入当前内存中的所有记录。
+     * Rewrites the entire file - used for update (edit/delete) operations.
+     * This method clears the file and writes all current records from memory.
      */
     public void rewriteFile() {
         try {
@@ -227,9 +253,10 @@ public class LifeRecordManager {
                 content.append(record.toFileFormat()).append(System.lineSeparator());
             }
             // 使用TRUNCATE_EXISTING选项清空文件，然后写入新内容
+            // Use TRUNCATE_EXISTING option to clear the file, then write new content
             Files.write(filePath, content.toString().getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-            System.out.println("所有记录已重新写入文件。");
+            System.out.println("所有记录已重新写入文件。"); // All records have been rewritten to the file.
         } catch (IOException e) {
             System.err.println("Error rewriting file: " + e.getMessage());
         }
