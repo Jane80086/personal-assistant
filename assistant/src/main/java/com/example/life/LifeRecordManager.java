@@ -1,20 +1,19 @@
 package com.example.life;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class LifeRecordManager {
-    private List<LifeRecord> records;
+    private final List<LifeRecord> records;
     private static final String DATA_DIR = "data";
     private static final String FILE_NAME = "life_records.txt";
     private static final String FILE_PATH = DATA_DIR + "/" + FILE_NAME;
@@ -91,7 +90,7 @@ public class LifeRecordManager {
         try {
             Path filePath = Paths.get(FILE_PATH);
             String recordLine = record.toFileFormat() + System.lineSeparator();
-            Files.write(filePath, recordLine.getBytes(StandardCharsets.UTF_8),
+            Files.writeString(filePath, recordLine, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             System.err.println("Error saving record to file: " + e.getMessage());
@@ -150,11 +149,16 @@ public class LifeRecordManager {
      * Searches for records by multiple criteria (title, content, category, mood).
      * This performs a fuzzy search (contains) for each non-empty keyword and combines
      * them with an AND logic.
+     * IMPORTANT: This method now *only* performs the search and returns the results.
+     * It no longer prints the search results directly to System.out.
+     * The display of results is now handled by LifeRecordMenu.
+     *
      * @param titleKeyword Keyword to search in titles (can be null or empty).
      * @param contentKeyword Keyword to search in content (can be null or empty).
      * @param categoryKeyword Keyword to search in categories (can be null or empty).
      * @param moodKeyword Keyword to search in moods (can be null or empty).
-     * @return A list of matching records.
+     * @return A list of matching records. Returns an empty list if no records match
+     * or if no search keywords were provided.
      */
     public List<LifeRecord> searchRecords(String titleKeyword, String contentKeyword, String categoryKeyword, String moodKeyword) {
         // Normalize keywords for case-insensitive and empty string handling
@@ -163,14 +167,15 @@ public class LifeRecordManager {
         String lowerCaseCategoryKeyword = (categoryKeyword != null && !categoryKeyword.trim().isEmpty()) ? categoryKeyword.trim().toLowerCase() : null;
         String lowerCaseMoodKeyword = (moodKeyword != null && !moodKeyword.trim().isEmpty()) ? moodKeyword.trim().toLowerCase() : null;
 
-        // Check if all keywords are empty, indicating no search criteria
+        // If all keywords are empty, indicating no search criteria, return an empty list immediately.
+        // The calling class (LifeRecordMenu) will handle the "no input" message.
         if (lowerCaseTitleKeyword == null && lowerCaseContentKeyword == null &&
                 lowerCaseCategoryKeyword == null && lowerCaseMoodKeyword == null) {
-            System.out.println("没有输入搜索关键词，请至少输入一个关键词。"); // No search keywords entered, please enter at least one.
             return new ArrayList<>();
         }
 
-        List<LifeRecord> matchingRecords = records.stream()
+        // Directly return the collected list, removing the redundant local variable
+        return records.stream()
                 .filter(record -> {
                     boolean matchesTitle = (lowerCaseTitleKeyword == null) || record.getTitle().toLowerCase().contains(lowerCaseTitleKeyword);
                     boolean matchesContent = (lowerCaseContentKeyword == null) || record.getContent().toLowerCase().contains(lowerCaseContentKeyword);
@@ -179,18 +184,6 @@ public class LifeRecordManager {
                     return matchesTitle && matchesContent && matchesCategory && matchesMood; // AND logic for all conditions
                 })
                 .collect(Collectors.toList());
-
-        if (matchingRecords.isEmpty()) {
-            System.out.println("没有找到匹配的记录。"); // No matching records found.
-        } else {
-            System.out.println("\n--- 搜索结果 ---"); // --- Search Results ---
-            for (int i = 0; i < matchingRecords.size(); i++) {
-                System.out.println("结果 #" + (i + 1)); // Result #
-                System.out.println(matchingRecords.get(i));
-            }
-            System.out.println("--------------------");
-        }
-        return matchingRecords;
     }
 
 
@@ -223,19 +216,16 @@ public class LifeRecordManager {
     /**
      * Deletes a record by its index (1-based).
      * @param index The 1-based index of the record to delete.
-     * @return true if the record was deleted, false otherwise.
      */
-    public boolean deleteRecord(int index) {
+    public void deleteRecord(int index) {
         if (index > 0 && index <= records.size()) {
             records.remove(index - 1);
             System.out.println("Record #" + index + " deleted successfully.");
             // 重新写入文件
             // Rewrite file
             rewriteFile();
-            return true;
         } else {
             System.out.println("Invalid record number. Please enter a valid number.");
-            return false;
         }
     }
 
@@ -254,7 +244,7 @@ public class LifeRecordManager {
             }
             // 使用TRUNCATE_EXISTING选项清空文件，然后写入新内容
             // Use TRUNCATE_EXISTING option to clear the file, then write new content
-            Files.write(filePath, content.toString().getBytes(StandardCharsets.UTF_8),
+            Files.writeString(filePath, content.toString(), StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             System.out.println("所有记录已重新写入文件。"); // All records have been rewritten to the file.
         } catch (IOException e) {
