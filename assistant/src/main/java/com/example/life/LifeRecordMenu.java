@@ -145,16 +145,24 @@ public class LifeRecordMenu {
     }
 
     private void deleteRecord() {
-        manager.viewAllRecords(); // Show records to help user choose
-        if (manager.getRecord(1) == null) { // Check if there are any records to delete
+        manager.viewAllRecords();
+        if (manager.getRecord(1) == null) {
+            System.out.println("没有记录可以删除。"); // Added message for clarity
             return;
         }
-        System.out.print("Enter the number of the record to delete: ");
+
+        System.out.println("输入想要删除记录的序号 (输入 0 取消): "); // Added prompt for cancellation
         try {
             int recordNumber = Integer.parseInt(scanner.nextLine());
+
+            if (recordNumber == 0) {
+                System.out.println("删除操作已取消。"); // Confirmation message for cancellation
+                return;
+            }
+
             manager.deleteRecord(recordNumber);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
+            System.out.println("非法输入,请输入数字。");
         }
     }
 }
