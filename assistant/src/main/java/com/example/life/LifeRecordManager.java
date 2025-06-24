@@ -128,24 +128,6 @@ public class LifeRecordManager {
     }
 
     /**
-     * Displays all life records.
-     * Note: This method now explicitly prints full details.
-     * For summary view, use getAllRecords() in conjunction with LifeRecordMenu's new browseRecordsWithDetails().
-     */
-    public void viewAllRecords() {
-        if (records.isEmpty()) {
-            System.out.println("No life records found.");
-            return;
-        }
-        System.out.println("\n--- All Life Records ---");
-        for (int i = 0; i < records.size(); i++) {
-            System.out.println("Record #" + (i + 1));
-            System.out.println(records.get(i));
-        }
-        System.out.println("------------------------");
-    }
-
-    /**
      * Searches for records by multiple criteria (title, content, category, mood).
      * This performs a fuzzy search (contains) for each non-empty keyword and combines
      * them with an AND logic.
