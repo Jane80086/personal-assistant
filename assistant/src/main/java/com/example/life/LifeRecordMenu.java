@@ -3,6 +3,7 @@ package com.example.life;
 import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDateTime; // Added import for LocalDateTime if not already present
 
 public class LifeRecordMenu {
     private final LifeRecordManager manager;
@@ -18,7 +19,7 @@ public class LifeRecordMenu {
         do {
             System.out.println("\n--- 记录生活菜单 ---");
             System.out.println("1. 添加记录");
-            System.out.println("2. 浏览所有记录");
+            System.out.println("2. 浏览所有记录"); // Updated menu text for clarity
             System.out.println("3. 搜索记录");
             System.out.println("4. 编辑记录");
             System.out.println("5. 删除记录");
@@ -32,13 +33,13 @@ public class LifeRecordMenu {
                         addRecord();
                         break;
                     case 2:
-                        manager.viewAllRecords();
+                        browseRecordsWithDetails(); // Call the new method for browsing with details
                         break;
                     case 3:
                         searchRecords();
                         break;
                     case 4:
-                        editRecord();
+                        editRecord(); // Call the new editRecord method
                         break;
                     case 5:
                         deleteRecord();
@@ -66,18 +67,18 @@ public class LifeRecordMenu {
 
         String category = selectCategory();
         if (category == null) {
-            category = "未分类";
+            category = "未分类"; // Default if user cancels category selection
         }
 
         String mood = selectMood();
         if (mood == null) {
-            mood = "未记录";
+            mood = "未记录"; // Default if user cancels mood selection
         }
 
         System.out.print("请输入记录内容: ");
         String content = scanner.nextLine().trim();
         if (content.isEmpty()) {
-            content = "";
+            content = ""; // Allow empty content
         }
 
         manager.addRecord(title, content, category, mood);
@@ -96,20 +97,20 @@ public class LifeRecordMenu {
         try {
             String input = scanner.nextLine();
             if (input.trim().isEmpty()) {
-                return null; // 空输入时返回null
+                return null; // Empty input means cancellation or no selection
             }
             int choice = Integer.parseInt(input);
             if (choice == 0) {
-                return null; // 取消
+                return null; // Cancel
             } else if (choice >= 1 && choice <= categories.size()) {
                 return categories.get(choice - 1);
             } else {
                 System.out.println("无效选择，请重新选择。");
-                return selectCategory(); // 递归重新选择
+                return selectCategory(); // Recursively ask again
             }
         } catch (NumberFormatException e) {
             System.out.println("无效输入，请输入数字。");
-            return selectCategory(); // 递归重新选择
+            return selectCategory(); // Recursively ask again
         }
     }
 
@@ -126,20 +127,20 @@ public class LifeRecordMenu {
         try {
             String input = scanner.nextLine();
             if (input.trim().isEmpty()) {
-                return null; // 空输入时返回null
+                return null; // Empty input means cancellation or no selection
             }
             int choice = Integer.parseInt(input);
             if (choice == 0) {
-                return null; // 取消
+                return null; // Cancel
             } else if (choice >= 1 && choice <= moods.size()) {
                 return moods.get(choice - 1);
             } else {
                 System.out.println("无效选择，请重新选择。");
-                return selectMood(); // 递归重新选择
+                return selectMood(); // Recursively ask again
             }
         } catch (NumberFormatException e) {
             System.out.println("无效输入，请输入数字。");
-            return selectMood(); // 递归重新选择
+            return selectMood(); // Recursively ask again
         }
     }
 
@@ -211,6 +212,46 @@ public class LifeRecordMenu {
 
         } catch (NumberFormatException e) {
             System.out.println("非法输入,请输入数字。");
+        }
+    }
+
+    /**
+     * Handles browsing records by showing summaries and allowing detail viewing.
+     */
+    private void browseRecordsWithDetails() {
+        while (true) {
+            List<LifeRecord> allRecords = manager.getAllRecords(); // Get all records
+
+            if (allRecords.isEmpty()) {
+                System.out.println("没有记录可以浏览。");
+                return; // Exit if no records
+            }
+
+            System.out.println("\n--- 所有生活记录摘要 ---");
+            for (int i = 0; i < allRecords.size(); i++) {
+                System.out.println("记录 #" + (i + 1) + ": " + allRecords.get(i).getTitle());
+            }
+            System.out.println("0. 返回上一级");
+            System.out.print("输入序号查看详情 (输入 0 返回): ");
+
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                if (choice == 0) {
+                    System.out.println("返回上一级菜单。");
+                    break; // Exit the loop and return to main menu
+                } else {
+                    LifeRecord record = manager.getRecord(choice); // Use existing getRecord
+                    if (record != null) {
+                        System.out.println("\n--- 记录详情 #" + choice + " ---");
+                        System.out.println(record); // Prints full details using toString()
+                        System.out.println("-------------------------");
+                    } else {
+                        System.out.println("无效的记录序号，请检查。");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("非法输入,请输入数字。");
+            }
         }
     }
 

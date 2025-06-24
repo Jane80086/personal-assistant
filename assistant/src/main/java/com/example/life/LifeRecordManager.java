@@ -63,6 +63,10 @@ public class LifeRecordManager {
                         // 解析文件格式: timestamp | category | mood | title | content
                         String[] parts = line.split(" \\| ", 5);
                         if (parts.length == 5) {
+                            // When loading, reconstruct LocalDateTime from string if needed,
+                            // but for now, the LifeRecord constructor sets a new timestamp.
+                            // If you want to preserve original timestamp, you'd parse parts[0]
+                            // and add a constructor that takes LocalDateTime.
                             records.add(new LifeRecord(parts[3], parts[4], parts[1], parts[2]));
                         }
                     }
@@ -76,6 +80,8 @@ public class LifeRecordManager {
 
     /**
      * 保存记录到文件
+     * 此方法仅用于添加新记录，因为它使用APPEND模式。
+     * 对于编辑和删除，将使用rewriteFile()方法来完全更新文件。
      */
     private void saveRecordToFile(LifeRecord record) {
         try {
@@ -112,12 +118,14 @@ public class LifeRecordManager {
     public void addRecord(String title, String content, String category, String mood) {
         LifeRecord record = new LifeRecord(title, content, category, mood);
         records.add(record);
-        saveRecordToFile(record);
+        saveRecordToFile(record); // Use append for new records
         System.out.println("Life record added and saved successfully!");
     }
 
     /**
      * Displays all life records.
+     * Note: This method now explicitly prints full details.
+     * For summary view, use getAllRecords() in conjunction with LifeRecordMenu's new browseRecordsWithDetails().
      */
     public void viewAllRecords() {
         if (records.isEmpty()) {
@@ -188,6 +196,7 @@ public class LifeRecordManager {
         }
     }
 
+
     /**
      * Deletes a record by its index (1-based).
      * @param index The 1-based index of the record to delete.
@@ -207,7 +216,8 @@ public class LifeRecordManager {
     }
 
     /**
-     * 重新写入整个文件 - 公开方法供编辑功能使用
+     * 重新写入整个文件 - 用于更新(编辑/删除)操作
+     * 此方法会清空文件并写入当前内存中的所有记录。
      */
     public void rewriteFile() {
         try {
@@ -216,8 +226,10 @@ public class LifeRecordManager {
             for (LifeRecord record : records) {
                 content.append(record.toFileFormat()).append(System.lineSeparator());
             }
+            // 使用TRUNCATE_EXISTING选项清空文件，然后写入新内容
             Files.write(filePath, content.toString().getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            System.out.println("所有记录已重新写入文件。");
         } catch (IOException e) {
             System.err.println("Error rewriting file: " + e.getMessage());
         }
@@ -233,5 +245,13 @@ public class LifeRecordManager {
             return records.get(index - 1);
         }
         return null;
+    }
+
+    /**
+     * Returns a copy of the list of all life records.
+     * @return A List of LifeRecord objects.
+     */
+    public List<LifeRecord> getAllRecords() {
+        return new ArrayList<>(records);
     }
 }
