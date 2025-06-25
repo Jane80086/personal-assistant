@@ -105,20 +105,22 @@ public class HealthRecord {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return "----------------------------------------\n" +
-                "日期: " + recordDate.format(formatter)  + "\n" +
-                "身高: " + height + " cm\n" +
-                "体重: " + weight + " kg\n" +
-                "心率: " + heartRate + " 次/分钟\n" +
-                "血压: " + bloodPressureHigh + "/" + bloodPressureLow + " mmHg\n" +
-                "睡眠: " + sleepHours + " 小时\n" +
-                "步数: " + steps + " 步\n" +
+                "日期: " + (recordDate != null ? recordDate.format(formatter)  : "无") + "\n" +
+                "身高: " + (height != null ? height + " cm" : "无") + "\n" +
+                "体重: " + (weight != null ? weight + " kg" : "无") + "\n" +
+                "心率: " + (heartRate != null ? heartRate + " 次/分钟" : "无") + "\n" +
+                "血压: " + (bloodPressureHigh != null || bloodPressureLow != null ?
+                (bloodPressureHigh != null ? bloodPressureHigh : "?") + "/" +
+                        (bloodPressureLow != null ? bloodPressureLow : "?") + " mmHg" : "无") + "\n" +
+                "睡眠: " + (sleepHours != null ? sleepHours + " 小时" : "无") + "\n" +
+                "步数: " + (steps != null ? steps + " 步" : "无") + "\n" +
                 "备注: " + (notes != null ? notes : "无") + "\n" +
                 "----------------------------------------";
     }
 
     public String toFileFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return recordDate.format(formatter)  + " | " +
+        return (recordDate != null ? recordDate.format(formatter)  : "") + " | " +
                 (weight != null ? weight : "") + " | " +
                 (height != null ? height : "") + " | " +
                 (heartRate != null ? heartRate : "") + " | " +
