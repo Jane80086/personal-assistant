@@ -14,9 +14,10 @@ import java.util.stream.Collectors;
 
 public class LifeRecordManager {
     private final List<LifeRecord> records;
-    private static final String DATA_DIR = "data";
-    private static final String FILE_NAME = "life_records.txt";
-    private static final String FILE_PATH = DATA_DIR + "/" + FILE_NAME;
+
+    private final String dataDir;
+    private final String fileName;
+    private final String filePath;
 
     private static final List<String> CATEGORIES = Arrays.asList(
             "日常", "回忆", "事件", "工作", "学习", "健康", "旅行", "家庭", "朋友", "爱好"
@@ -27,17 +28,24 @@ public class LifeRecordManager {
     );
 
     public LifeRecordManager() {
+        this("data", "life_records.txt");
+    }
+
+    public LifeRecordManager(String dataDir, String fileName) {
         this.records = new ArrayList<>();
+        this.dataDir = dataDir;
+        this.fileName = fileName;
+        this.filePath = this.dataDir + "/" + this.fileName;
         createDataDirectory();
         loadRecordsFromFile();
     }
 
     private void createDataDirectory() {
         try {
-            Path dataPath = Paths.get(DATA_DIR);
+            Path dataPath = Paths.get(this.dataDir);
             if (!Files.exists(dataPath)) {
                 Files.createDirectories(dataPath);
-                System.out.println("已创建数据文件: " + DATA_DIR);
+                System.out.println("已创建数据文件: " + this.dataDir);
             }
         } catch (IOException e) {
             System.err.println("错误创建数据文件: " + e.getMessage());
@@ -46,14 +54,15 @@ public class LifeRecordManager {
 
     private void loadRecordsFromFile() {
         try {
-            Path filePath = Paths.get(FILE_PATH);
-            if (Files.exists(filePath)) {
-                List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+            Path file = Paths.get(this.filePath);
+            if (Files.exists(file)) {
+                List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
                 for (String line : lines) {
                     if (!line.trim().isEmpty()) {
                         String[] parts = line.split(" \\| ", 5);
                         if (parts.length == 5) {
-                            records.add(new LifeRecord(parts[3], parts[4], parts[1], parts[2]));
+                            LifeRecord record = new LifeRecord(parts[3], parts[4], parts[1], parts[2]);
+                            records.add(record);
                         }
                     }
                 }
@@ -66,9 +75,9 @@ public class LifeRecordManager {
 
     private void saveRecordToFile(LifeRecord record) {
         try {
-            Path filePath = Paths.get(FILE_PATH);
+            Path file = Paths.get(this.filePath);
             String recordLine = record.toFileFormat() + System.lineSeparator();
-            Files.writeString(filePath, recordLine, StandardCharsets.UTF_8,
+            Files.writeString(file, recordLine, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             System.err.println("保存记录到文件错误: " + e.getMessage());
@@ -140,12 +149,12 @@ public class LifeRecordManager {
 
     public void rewriteFile() {
         try {
-            Path filePath = Paths.get(FILE_PATH);
+            Path file = Paths.get(this.filePath);
             StringBuilder content = new StringBuilder();
             for (LifeRecord record : records) {
                 content.append(record.toFileFormat()).append(System.lineSeparator());
             }
-            Files.writeString(filePath, content.toString(), StandardCharsets.UTF_8,
+            Files.writeString(file, content.toString(), StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             System.out.println("所有记录已重新写入文件。");
         } catch (IOException e) {
