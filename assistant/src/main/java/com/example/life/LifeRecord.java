@@ -73,6 +73,17 @@ public class LifeRecord {
     //返回此记录的文件存储格式字符串
     public String toFileFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return timestamp.format(formatter) + " | " + category + " | " + mood + " | " + title + " | " + content;
+        return timestamp.format(formatter) + " | " +
+                escape(category) + " | " +
+                escape(mood) + " | " +
+                escape(title) + " | " +
+                escape(content);
     }
+
+
+    //转义方法
+    private String escape(String input) {
+        return input == null ? "null" : input.replace(" | ", "[PIPE]");
+    }
+
 }

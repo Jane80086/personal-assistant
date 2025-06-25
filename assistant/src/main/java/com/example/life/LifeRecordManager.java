@@ -9,6 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections; // <-- 新增导入
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,11 @@ public class LifeRecordManager {
         }
     }
 
+    //转义方法
+    private String unescape(String input) {
+        return input == null || input.equals("null") ? null : input.replace("[PIPE]", " | ");
+    }
+
     //从文件中加载记录
     private void loadRecordsFromFile() {
         try {
@@ -66,7 +72,12 @@ public class LifeRecordManager {
                     if (!line.trim().isEmpty()) {
                         String[] parts = line.split(" \\| ", 5);
                         if (parts.length == 5) {
-                            LifeRecord record = new LifeRecord(parts[3], parts[4], parts[1], parts[2]);
+                            LifeRecord record = new LifeRecord(
+                                    unescape(parts[3]),
+                                    unescape(parts[4]),
+                                    unescape(parts[1]),
+                                    unescape(parts[2])
+                            );
                             records.add(record);
                         }
                     }
@@ -92,12 +103,14 @@ public class LifeRecordManager {
 
     //获取所有生活记录
     public List<String> getCategories() {
-        return new ArrayList<>(CATEGORIES);
+        // 返回一个不可修改的视图
+        return Collections.unmodifiableList(CATEGORIES);
     }
 
     //获取所有心情
     public List<String> getMoods() {
-        return new ArrayList<>(MOODS);
+        // 返回一个不可修改的视图
+        return Collections.unmodifiableList(MOODS);
     }
 
     //添加生活记录
@@ -189,6 +202,7 @@ public class LifeRecordManager {
 
     //获取所有生活记录
     public List<LifeRecord> getAllRecords() {
-        return new ArrayList<>(records);
+        // 返回一个不可修改的视图
+        return Collections.unmodifiableList(records);
     }
 }

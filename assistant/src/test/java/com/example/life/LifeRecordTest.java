@@ -374,34 +374,41 @@ public class LifeRecordTest {
         // 创建 LifeRecord 实例
         LifeRecord record = new LifeRecord(injectedTitle, injectedContent, injectedCategory, injectedMood);
 
-        // 验证 Getter 方法是否返回了原始的、未被修改的字符串
-        assertEquals(injectedTitle, record.getTitle(), "标题中的分隔符不应影响其存储和获取");
-        assertEquals(injectedContent, record.getContent(), "内容中的分隔符不应影响其存储和获取");
-        assertEquals(injectedCategory, record.getCategory(), "分类中的分隔符不应影响其存储和获取");
-        assertEquals(injectedMood, record.getMood(), "心情中的分隔符不应影响其存储和获取");
+        // 验证 Getter 方法是否返回原始字符串
+        assertEquals(injectedTitle, record.getTitle());
+        assertEquals(injectedContent, record.getContent());
+        assertEquals(injectedCategory, record.getCategory());
+        assertEquals(injectedMood, record.getMood());
 
-        // 验证 toFileFormat() 方法的输出是否正确包含了这些分隔符，且没有引入额外的问题
+        // 调用 toFileFormat 并验证结构
         String fileFormat = record.toFileFormat();
-        // 关键是验证原始字符串作为子串是否存在
-        assertTrue(fileFormat.contains(injectedTitle), "toFileFormat() 应包含完整的标题，即使有分隔符");
-        assertTrue(fileFormat.contains(injectedContent), "toFileFormat() 应包含完整的内容，即使有分隔符");
-        assertTrue(fileFormat.contains(injectedCategory), "toFileFormat() 应包含完整的分类，即使有分隔符");
-        assertTrue(fileFormat.contains(injectedMood), "toFileFormat() 应包含完整的心情，即使有分隔符");
 
-        // 验证 toString() 方法的输出是否正确包含了这些分隔符
-        String toStringOutput = record.toString();
-        assertTrue(toStringOutput.contains(injectedTitle), "toString() 应包含完整的标题，即使有分隔符");
-        assertTrue(toStringOutput.contains(injectedContent), "toString() 应包含完整的内容，即使有分隔符");
-        assertTrue(toStringOutput.contains(injectedCategory), "toString() 应包含完整的分类，即使有分隔符");
-        assertTrue(toStringOutput.contains(injectedMood), "toString() 应包含完整的心情，即使有分隔符");
+        // 使用 escape 方法生成转义后的字段值（模拟生产逻辑）
+        String escapedTitle = escape(injectedTitle);
+        String escapedContent = escape(injectedContent);
+        String escapedCategory = escape(injectedCategory);
+        String escapedMood = escape(injectedMood);
 
-        // 进一步验证 toFileFormat 的结构，确保它仍然符合预期的5个部分（时间戳，分类，心情，标题，内容）
-        String[] parts = fileFormat.split(" \\| ", -1); // -1 ensures trailing empty strings are not discarded
+        // 检查是否包含转义后的字符串
+        assertTrue(fileFormat.contains(escapedTitle), "toFileFormat() 应包含转义后的标题");
+        assertTrue(fileFormat.contains(escapedContent), "toFileFormat() 应包含转义后的内容");
+        assertTrue(fileFormat.contains(escapedCategory), "toFileFormat() 应包含转义后的分类");
+        assertTrue(fileFormat.contains(escapedMood), "toFileFormat() 应包含转义后的心情");
+
+        // 验证结构仍然有5段（时间戳 + 4 字段）
+        String[] parts = fileFormat.split(" \\| ", -1);
         assertEquals(5, parts.length, "toFileFormat() 应分隔成5个部分");
 
-        assertEquals(injectedCategory, parts[1], "文件格式的分类部分应匹配原始输入");
-        assertEquals(injectedMood, parts[2], "文件格式的心情部分应匹配原始输入");
-        assertEquals(injectedTitle, parts[3], "文件格式的标题部分应匹配原始输入");
-        assertEquals(injectedContent, parts[4], "文件格式的内容部分应匹配原始输入");
+        // 逐个比较字段内容是否匹配转义值
+        assertEquals(escapedCategory, parts[1]);
+        assertEquals(escapedMood, parts[2]);
+        assertEquals(escapedTitle, parts[3]);
+        assertEquals(escapedContent, parts[4]);
     }
+
+    // 用于测试中的 escape 方法（与生产逻辑一致）
+    private String escape(String input) {
+        return input == null ? "null" : input.replace(" | ", "[PIPE]");
+    }
+
 }

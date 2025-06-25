@@ -684,14 +684,13 @@ public class LifeRecordManagerTest {
         manager.addRecord("测试记录", "测试内容", "测试分类", "测试心情");
 
         List<LifeRecord> records = manager.getAllRecords();
-        int originalSize = records.size();
+        int originalSize = records.size(); // 获取原始大小，用于稍后验证
 
-        // 尝试修改返回的列表
-        records.clear();
+        // 尝试修改返回的不可修改列表，预期会抛出异常
+        assertThrows(UnsupportedOperationException.class, records::clear, "getAllRecords() 返回的列表不应允许外部修改，尝试 clear() 应该抛出 UnsupportedOperationException");
 
-        // 再次获取记录列表，验证原始列表未被修改
         List<LifeRecord> newRecords = manager.getAllRecords();
-        assertEquals(originalSize, newRecords.size(), "原始记录列表不应被外部修改影响");
+        assertEquals(originalSize, newRecords.size(), "原始记录列表在外部修改尝试后不应受到影响");
     }
 
     // 验证记录添加后的文件内容格式
