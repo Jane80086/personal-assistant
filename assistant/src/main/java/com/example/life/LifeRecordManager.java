@@ -16,13 +16,16 @@ public class LifeRecordManager {
     private final List<LifeRecord> records;
 
     private final String dataDir;
+    @SuppressWarnings("FieldCanBeLocal")
     private final String fileName;
     private final String filePath;
 
+    //预设的生活记录分类列表
     private static final List<String> CATEGORIES = Arrays.asList(
             "日常", "回忆", "事件", "工作", "学习", "健康", "旅行", "家庭", "朋友", "爱好"
     );
 
+    // 预设的心情列表，包含表情符号
     private static final List<String> MOODS = Arrays.asList(
             "😊 开心", "😢 难过", "😤 生气", "😴 疲惫", "😎 激动", "😰 焦虑", "😌 冷静", "🤔 思考", "😍 恋爱", "😕 困惑"
     );
@@ -40,6 +43,7 @@ public class LifeRecordManager {
         loadRecordsFromFile();
     }
 
+    //创建数据目录（如果不存在）
     private void createDataDirectory() {
         try {
             Path dataPath = Paths.get(this.dataDir);
@@ -52,6 +56,7 @@ public class LifeRecordManager {
         }
     }
 
+    //从文件中加载记录
     private void loadRecordsFromFile() {
         try {
             Path file = Paths.get(this.filePath);
@@ -73,6 +78,7 @@ public class LifeRecordManager {
         }
     }
 
+    //保存记录到文件
     private void saveRecordToFile(LifeRecord record) {
         try {
             Path file = Paths.get(this.filePath);
@@ -84,14 +90,17 @@ public class LifeRecordManager {
         }
     }
 
+    //获取所有生活记录
     public List<String> getCategories() {
         return new ArrayList<>(CATEGORIES);
     }
 
+    //获取所有心情
     public List<String> getMoods() {
         return new ArrayList<>(MOODS);
     }
 
+    //添加生活记录
     public void addRecord(String title, String content, String category, String mood) {
         LifeRecord record = new LifeRecord(title, content, category, mood);
         records.add(record);
@@ -99,12 +108,15 @@ public class LifeRecordManager {
         System.out.println("生活记录添加并保存成功！");
     }
 
+    //搜索生活记录
     public List<LifeRecord> searchRecords(String titleKeyword, String contentKeyword, String categoryKeyword, String moodKeyword) {
+        // 将关键词转换为小写，并处理null或空字符串的情况
         String lowerCaseTitleKeyword = (titleKeyword != null && !titleKeyword.trim().isEmpty()) ? titleKeyword.trim().toLowerCase() : null;
         String lowerCaseContentKeyword = (contentKeyword != null && !contentKeyword.trim().isEmpty()) ? contentKeyword.trim().toLowerCase() : null;
         String lowerCaseCategoryKeyword = (categoryKeyword != null && !categoryKeyword.trim().isEmpty()) ? categoryKeyword.trim().toLowerCase() : null;
         String lowerCaseMoodKeyword = (moodKeyword != null && !moodKeyword.trim().isEmpty()) ? moodKeyword.trim().toLowerCase() : null;
 
+        // 如果所有关键词都为空，则直接返回空列表，避免不必要的遍历
         if (lowerCaseTitleKeyword == null && lowerCaseContentKeyword == null &&
                 lowerCaseCategoryKeyword == null && lowerCaseMoodKeyword == null) {
             return new ArrayList<>();
@@ -112,15 +124,18 @@ public class LifeRecordManager {
 
         return records.stream()
                 .filter(record -> {
+                    // 每个条件都检查：如果关键词为空则认为匹配，否则进行不区分大小写的包含匹配
                     boolean matchesTitle = (lowerCaseTitleKeyword == null) || record.getTitle().toLowerCase().contains(lowerCaseTitleKeyword);
                     boolean matchesContent = (lowerCaseContentKeyword == null) || record.getContent().toLowerCase().contains(lowerCaseContentKeyword);
                     boolean matchesCategory = (lowerCaseCategoryKeyword == null) || record.getCategory().toLowerCase().contains(lowerCaseCategoryKeyword);
                     boolean matchesMood = (lowerCaseMoodKeyword == null) || record.getMood().toLowerCase().contains(lowerCaseMoodKeyword);
+                    // 所有非空关键词都必须匹配
                     return matchesTitle && matchesContent && matchesCategory && matchesMood;
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());// 将匹配的记录收集为新列表
     }
 
+    //编辑生活记录
     public boolean editRecord(int index, String newTitle, String newContent, String newCategory, String newMood) {
         if (index > 0 && index <= records.size()) {
             LifeRecord recordToEdit = records.get(index - 1);
@@ -137,6 +152,7 @@ public class LifeRecordManager {
         }
     }
 
+    //删除生活记录
     public void deleteRecord(int index) {
         if (index > 0 && index <= records.size()) {
             records.remove(index - 1);
@@ -147,6 +163,7 @@ public class LifeRecordManager {
         }
     }
 
+    //重写文件
     public void rewriteFile() {
         try {
             Path file = Paths.get(this.filePath);
@@ -162,6 +179,7 @@ public class LifeRecordManager {
         }
     }
 
+    //获取生活记录
     public LifeRecord getRecord(int index) {
         if (index > 0 && index <= records.size()) {
             return records.get(index - 1);
@@ -169,6 +187,7 @@ public class LifeRecordManager {
         return null;
     }
 
+    //获取所有生活记录
     public List<LifeRecord> getAllRecords() {
         return new ArrayList<>(records);
     }

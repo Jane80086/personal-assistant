@@ -55,6 +55,7 @@ public class LifeRecordMenu {
         } while (choice != 0);
     }
 
+    // 添加记录
     private void addRecord() {
         System.out.print("请输入记录标题: ");
         String title = scanner.nextLine().trim();
@@ -63,11 +64,13 @@ public class LifeRecordMenu {
             return;
         }
 
+        // 调用方法让用户选择分类
         String category = selectCategory();
         if (category == null) {
             category = "未分类";
         }
 
+        // 调用方法让用户选择心情
         String mood = selectMood();
         if (mood == null) {
             mood = "未记录";
@@ -82,6 +85,7 @@ public class LifeRecordMenu {
         manager.addRecord(title, content, category, mood);
     }
 
+    // 选择分类
     private String selectCategory() {
         List<String> categories = manager.getCategories();
 
@@ -112,6 +116,7 @@ public class LifeRecordMenu {
         }
     }
 
+    // 选择心情
     private String selectMood() {
         List<String> moods = manager.getMoods();
 
@@ -142,6 +147,7 @@ public class LifeRecordMenu {
         }
     }
 
+    // 搜索记录
     private void searchRecords() {
         System.out.println("\n--- 搜索记录 (多条件模糊查询) ---");
         System.out.print("请输入标题关键词 (留空跳过): ");
@@ -161,6 +167,7 @@ public class LifeRecordMenu {
         displaySearchResults(matchingRecords, titleKeyword, contentKeyword, categoryKeyword, moodKeyword);
     }
 
+    // 显示搜索结果
     private void displaySearchResults(List<LifeRecord> matchingRecords, String titleKeyword, String contentKeyword, String categoryKeyword, String moodKeyword) {
         if (matchingRecords.isEmpty()) {
             if ((titleKeyword == null || titleKeyword.trim().isEmpty()) &&
@@ -182,6 +189,7 @@ public class LifeRecordMenu {
         }
     }
 
+    // 编辑记录
     private void editRecord() {
         List<LifeRecord> allRecords = manager.getAllRecords();
 
@@ -249,6 +257,7 @@ public class LifeRecordMenu {
         }
     }
 
+    // 浏览记录
     private void browseRecordsWithDetails() {
         while (true) {
             List<LifeRecord> allRecords = manager.getAllRecords();
@@ -286,6 +295,7 @@ public class LifeRecordMenu {
         }
     }
 
+    // 删除记录
     private void deleteRecord() {
         while (true) { // Loop to allow deleting multiple records or returning to the summary list
             List<LifeRecord> allRecords = manager.getAllRecords();

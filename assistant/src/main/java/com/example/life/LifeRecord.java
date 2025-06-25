@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class LifeRecord {
-    private String title;
-    private String content;
-    private LocalDateTime timestamp;
-    private String category;
-    private String mood;
+    private String title;//标题
+    private String content;//内容
+    private LocalDateTime timestamp;//记录创建或最后修改的时间戳
+    private String category;//分类
+    private String mood;//心情
 
     public LifeRecord(String title, String content, String category,String mood) {
         this.title = title;
@@ -70,6 +70,7 @@ public class LifeRecord {
                 "----------------------------------------";
     }
 
+    //返回此记录的文件存储格式字符串
     public String toFileFormat() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return timestamp.format(formatter) + " | " + category + " | " + mood + " | " + title + " | " + content;

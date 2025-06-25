@@ -8,8 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,42 +23,53 @@ public class LifeRecordManagerTest {
 
     private LifeRecordManager manager;
 
+    // 初始化测试数据
     @BeforeEach
     void setUp() throws IOException {
-        if (Files.exists(TEST_DATA_PATH)){
-            Files.walk(TEST_DATA_PATH)
-                    .sorted(java.util.Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(java.io.File::delete);
-        }
+        cleanupTestDirectory();
         Files.createDirectories(TEST_DATA_PATH);
         manager = new LifeRecordManager(TEST_DATA_DIR, TEST_FILE_NAME);
     }
 
+    // 清理测试数据
     @AfterEach
     void tearDown() throws IOException {
+        cleanupTestDirectory();
+    }
+
+    // 清理测试数据
+    private void cleanupTestDirectory() throws IOException {
         if (Files.exists(TEST_DATA_PATH)) {
-            Files.walk(TEST_DATA_PATH)
-                    .sorted(java.util.Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(java.io.File::delete);
+            try (var paths = Files.walk(TEST_DATA_PATH)) {
+                paths.sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(file -> {
+                            if (!file.delete()) {
+                                System.err.println("无法删除文件: " + file.getAbsolutePath());
+                            }
+                        });
+            }
         }
     }
+
+    // 测试数据目录创建
     @Test
-    void testCreateDataDirectory_initialCreation(){
+    void testCreateDataDirectory_initialCreation() {
         assertTrue(Files.exists(TEST_DATA_PATH), "数据目录应该被创建");
         assertTrue(Files.isDirectory(TEST_DATA_PATH), "测试路径应该是一个目录");
     }
 
+    // 测试数据目录创建
     @Test
-    void testCreateDataDirectory_alreadyExists() throws IOException {
+    void testCreateDataDirectory_alreadyExists() {
         manager = new LifeRecordManager(TEST_DATA_DIR, TEST_FILE_NAME); // 重新创建，模拟目录已存在
         assertTrue(Files.exists(TEST_DATA_PATH), "数据目录仍然应该存在");
         assertTrue(Files.isDirectory(TEST_DATA_PATH), "测试路径仍然应该是一个目录");
     }
 
+    // 测试添加单条记录并从文件重新加载的功能。
     @Test
-    void testAddRecordAndLoadFromFile_singleRecord() throws IOException {
+    void testAddRecordAndLoadFromFile_singleRecord()  {
         manager.addRecord("我的第一条记录", "这是今天的心情。", "日常", "😊 开心");
 
         LifeRecordManager newManager = new LifeRecordManager(TEST_DATA_DIR, TEST_FILE_NAME);
@@ -74,8 +86,9 @@ public class LifeRecordManagerTest {
         assertNotNull(record.getTimestamp(), "时间戳不应为空");
     }
 
+    // 测试添加多条记录并从文件重新加载的功能。
     @Test
-    void testAddRecordAndLoadFromFile_multipleRecords() throws IOException {
+    void testAddRecordAndLoadFromFile_multipleRecords() {
         manager.addRecord("记录1", "内容1", "日常", "开心");
         manager.addRecord("记录2", "内容2", "学习", "思考");
         manager.addRecord("记录3", "内容3", "旅行", "激动");
@@ -89,15 +102,18 @@ public class LifeRecordManagerTest {
         assertEquals("记录3", records.get(2).getTitle(), "第三条记录标题应匹配");
     }
 
+    // 测试从空数据文件加载记录
     @Test
-    void testLoadRecordsFromFile_emptyFile() throws IOException {
+    void testLoadRecordsFromFile_emptyFile() {
         assertEquals(0, manager.getAllRecords().size(), "空文件加载后记录列表应为空");
     }
 
+    //测试从包含格式错误行的文件中加载记录。
     @Test
     void testLoadRecordsFromFile_malformedLine() throws IOException {
         Files.writeString(TEST_FILE_PATH, "2024-06-25 10:00:00 | 日常 | 😊 开心 | 只有标题\n", StandardCharsets.UTF_8);
-        Files.writeString(TEST_FILE_PATH, "2024-06-25 10:01:00 | 日常 | 😊 开心 | 正确标题 | 正确内容\n", StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.APPEND);
+        Files.writeString(TEST_FILE_PATH, "2024-06-25 10:01:00 | 日常 | 😊 开心 | 正确标题 | 正确内容\n",
+                StandardCharsets.UTF_8, StandardOpenOption.APPEND);
 
         LifeRecordManager newManager = new LifeRecordManager(TEST_DATA_DIR, TEST_FILE_NAME);
         List<LifeRecord> records = newManager.getAllRecords();
@@ -106,6 +122,7 @@ public class LifeRecordManagerTest {
         assertEquals("正确标题", records.get(0).getTitle(), "正确记录的标题应匹配");
     }
 
+    // 测试按标题搜索记录
     @Test
     void testSearchRecords_byTitle() {
         manager.addRecord("Java编程学习", "今天学习了Java并发。", "学习", "😊 开心");
@@ -115,6 +132,7 @@ public class LifeRecordManagerTest {
         assertEquals("Java编程学习", results.get(0).getTitle(), "匹配标题的记录标题应正确");
     }
 
+    // 测试按内容搜索记录
     @Test
     void testSearchRecords_byContent() {
         manager.addRecord("Java编程学习", "今天学习了Java并发。", "学习", "😊 开心");
@@ -124,6 +142,7 @@ public class LifeRecordManagerTest {
         assertEquals("健身日常", results.get(0).getTitle(), "匹配内容的记录标题应正确");
     }
 
+    // 测试按分类搜索记录
     @Test
     void testSearchRecords_byCategory() {
         manager.addRecord("会议记录", "参加了项目例会。", "工作", "😌 冷静");
@@ -133,6 +152,7 @@ public class LifeRecordManagerTest {
         assertEquals("会议记录", results.get(0).getTitle(), "匹配分类的记录标题应正确");
     }
 
+    // 测试按心情搜索记录
     @Test
     void testSearchRecords_byMood() {
         manager.addRecord("心情低落", "今天感到有点难过。", "日常", "😢 难过");
@@ -142,6 +162,7 @@ public class LifeRecordManagerTest {
         assertEquals("心情低落", results.get(0).getTitle(), "匹配心情的记录标题应正确");
     }
 
+    // 测试多关键词搜索，所有提供的关键词都匹配一条记录的情况。
     @Test
     void testSearchRecords_multipleKeywords_allMatch() {
         manager.addRecord("项目总结", "完成了本周的项目总结报告。", "工作", "😌 冷静");
@@ -150,6 +171,7 @@ public class LifeRecordManagerTest {
         assertEquals("项目总结", results.get(0).getTitle(), "所有关键词匹配的记录标题应正确");
     }
 
+    // 测试多关键词搜索，所有提供的关键词都匹配一条记录的情况。
     @Test
     void testSearchRecords_multipleKeywords_partialMatch() {
         manager.addRecord("项目总结", "完成了本周的项目总结报告。", "工作", "😌 冷静");
@@ -158,6 +180,7 @@ public class LifeRecordManagerTest {
         assertTrue(results.isEmpty(), "部分关键词不匹配时，应返回空列表");
     }
 
+    //测试多关键词搜索，所有提供的关键词都匹配一条记录的情况。
     @Test
     void testSearchRecords_noKeywordsProvided() {
         manager.addRecord("记录1", "内容1", "日常", "开心");
@@ -165,6 +188,7 @@ public class LifeRecordManagerTest {
         assertTrue(results.isEmpty(), "未提供任何关键词时应返回空列表");
     }
 
+    //测试在提供空字符串或空白字符串作为关键词的情况下搜索功能。
     @Test
     void testSearchRecords_emptyKeywordsProvided() {
         manager.addRecord("记录1", "内容1", "日常", "开心");
@@ -172,6 +196,7 @@ public class LifeRecordManagerTest {
         assertTrue(results.isEmpty(), "提供空关键词时应返回空列表");
     }
 
+    //测试在没有记录与提供关键词匹配的情况下搜索功能。
     @Test
     void testSearchRecords_noMatch() {
         manager.addRecord("苹果", "水果", "食物", "开心");
@@ -179,10 +204,11 @@ public class LifeRecordManagerTest {
         assertTrue(results.isEmpty(), "没有匹配项时应返回空列表");
     }
 
+    //测试记录编辑功能，验证在有效索引下所有字段的更新。
     @Test
-    void testEditRecord_validIndex_allFieldsUpdated() throws IOException {
+    void testEditRecord_validIndex_allFieldsUpdated() throws  InterruptedException {
         manager.addRecord("原始标题", "原始内容", "日常", "😊 开心");
-        try { Thread.sleep(100); } catch (InterruptedException e) { /* 忽略 */ }
+        Thread.sleep(100); // 确保时间戳有差异
 
         boolean result = manager.editRecord(1, "新标题", "新内容", "工作", "😤 生气");
         assertTrue(result, "编辑应该成功");
@@ -203,19 +229,17 @@ public class LifeRecordManagerTest {
         assertEquals("😤 生气", loadedRecord.getMood(), "从文件加载的心情应匹配新心情");
     }
 
+    //测试记录编辑功能，验证在有效索引下，即使内容字段没有显式更改
     @Test
-    void testEditRecord_validIndex_noContentChanges() throws IOException {
+    void testEditRecord_validIndex_noContentChanges() throws InterruptedException {
         manager.addRecord("原始标题", "原始内容", "日常", "😊 开心");
         LifeRecord originalRecord = manager.getRecord(1);
         LocalDateTime originalTimestamp = originalRecord.getTimestamp();
 
-        try {
-            Thread.sleep(10); // 10毫秒延迟
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        Thread.sleep(10); // 10毫秒延迟
 
-        boolean result = manager.editRecord(1, originalRecord.getTitle(), originalRecord.getContent(), originalRecord.getCategory(), originalRecord.getMood());
+        boolean result = manager.editRecord(1, originalRecord.getTitle(), originalRecord.getContent(),
+                originalRecord.getCategory(), originalRecord.getMood());
         assertTrue(result, "即使值相同，编辑也应该成功");
 
         LifeRecord editedRecord = manager.getRecord(1);
@@ -228,6 +252,7 @@ public class LifeRecordManagerTest {
         assertTrue(loadedRecord.getTimestamp().isAfter(originalTimestamp), "从文件加载的记录时间戳应该被更新");
     }
 
+    //测试使用无效索引（零或负数）编辑记录。
     @Test
     void testEditRecord_invalidIndex_belowZero() {
         manager.addRecord("记录", "内容", "分类", "心情");
@@ -236,6 +261,7 @@ public class LifeRecordManagerTest {
         assertEquals(1, manager.getAllRecords().size(), "记录数量不应改变");
     }
 
+    //测试使用无效索引（超出列表大小）编辑记录。
     @Test
     void testEditRecord_invalidIndex_aboveSize() {
         manager.addRecord("记录", "内容", "分类", "心情");
@@ -244,14 +270,16 @@ public class LifeRecordManagerTest {
         assertEquals(1, manager.getAllRecords().size(), "记录数量不应改变");
     }
 
+    //测试使用空列表进行编辑
     @Test
     void testEditRecord_emptyList() {
         boolean result = manager.editRecord(1, "新", "新", "新", "新");
         assertFalse(result, "空列表时编辑任何索引都应失败");
     }
 
+    //测试记录删除功能，验证删除中间一条记录的行为。
     @Test
-    void testDeleteRecord_validIndex_middle() throws IOException {
+    void testDeleteRecord_validIndex_middle()  {
         manager.addRecord("记录1", "内容1", "日常", "开心");
         manager.addRecord("记录2", "内容2", "学习", "思考");
         manager.addRecord("记录3", "内容3", "旅行", "激动");
@@ -266,8 +294,9 @@ public class LifeRecordManagerTest {
         assertEquals("记录3", records.get(1).getTitle(), "第三条记录应变为第二条");
     }
 
+    //测试记录删除功能，验证删除第一条记录的行为。
     @Test
-    void testDeleteRecord_validIndex_first() throws IOException {
+    void testDeleteRecord_validIndex_first()  {
         manager.addRecord("记录1", "内容1", "日常", "开心");
         manager.addRecord("记录2", "内容2", "学习", "思考");
 
@@ -280,8 +309,9 @@ public class LifeRecordManagerTest {
         assertEquals("记录2", records.get(0).getTitle(), "第二条记录应变为第一条");
     }
 
+    //测试记录删除功能，验证删除最后一条记录的行为。
     @Test
-    void testDeleteRecord_validIndex_last() throws IOException {
+    void testDeleteRecord_validIndex_last()  {
         manager.addRecord("记录1", "内容1", "日常", "开心");
         manager.addRecord("记录2", "内容2", "学习", "思考");
 
@@ -294,6 +324,7 @@ public class LifeRecordManagerTest {
         assertEquals("记录1", records.get(0).getTitle(), "第一条记录应不变");
     }
 
+    //测试使用无效索引（零或负数）删除记录。
     @Test
     void testDeleteRecord_invalidIndex_belowZero() {
         manager.addRecord("记录", "内容", "分类", "心情");
@@ -301,6 +332,7 @@ public class LifeRecordManagerTest {
         assertEquals(1, manager.getAllRecords().size(), "记录数量不应改变");
     }
 
+    //测试使用无效索引（超出列表大小）删除记录。
     @Test
     void testDeleteRecord_invalidIndex_aboveSize() {
         manager.addRecord("记录", "内容", "分类", "心情");
@@ -308,12 +340,14 @@ public class LifeRecordManagerTest {
         assertEquals(1, manager.getAllRecords().size(), "记录数量不应改变");
     }
 
+    //测试使用空列表进行删除
     @Test
     void testDeleteRecord_emptyList() {
         manager.deleteRecord(1);
         assertEquals(0, manager.getAllRecords().size(), "空列表时删除任何索引都不应改变数量");
     }
 
+    //测试重写文件功能，验证删除所有记录后文件是否为空。
     @Test
     void testRewriteFile_noRecords() throws IOException {
         manager.rewriteFile();
@@ -321,6 +355,7 @@ public class LifeRecordManagerTest {
         assertTrue(lines.isEmpty(), "没有记录时重写文件，文件应为空");
     }
 
+    //测试重写文件功能，验证添加和删除记录后文件是否正确
     @Test
     void testRewriteFile_withRecords() throws IOException {
         manager.addRecord("记录A", "内容A", "日常", "开心");
@@ -355,6 +390,7 @@ public class LifeRecordManagerTest {
         assertEquals("新记录2", loadedRecords.get(1).getTitle(), "重写后的第二条记录标题应正确");
     }
 
+    //测试获取记录功能，验证获取指定索引的记录。
     @Test
     void testGetRecord_validIndex() {
         manager.addRecord("记录1", "内容1", "日常", "开心");
@@ -364,6 +400,7 @@ public class LifeRecordManagerTest {
         assertEquals("记录1", record.getTitle(), "获取的记录标题应匹配");
     }
 
+    //测试获取记录功能，验证使用无效索引获取记录。
     @Test
     void testGetRecord_invalidIndex() {
         manager.addRecord("记录1", "内容1", "日常", "开心");
@@ -371,11 +408,13 @@ public class LifeRecordManagerTest {
         assertNull(manager.getRecord(2), "索引超出范围，应返回null");
     }
 
+    //测试当管理器为空时检索所有记录。
     @Test
     void testGetAllRecords_empty() {
         assertTrue(manager.getAllRecords().isEmpty(), "空管理器应返回空记录列表");
     }
 
+    //测试当管理器包含记录时检索所有记录。
     @Test
     void testGetAllRecords_withRecords() {
         manager.addRecord("记录1", "内容1", "日常", "开心");
@@ -384,21 +423,23 @@ public class LifeRecordManagerTest {
         assertEquals(2, records.size(), "应返回两条记录");
     }
 
+    //测试获取分类功能
     @Test
     void testGetCategories() {
         List<String> categories = manager.getCategories();
         assertFalse(categories.isEmpty(), "分类列表不应为空");
-        assertTrue(categories.contains("日常"), "分类列表应包含‘日常’");
-        assertTrue(categories.contains("工作"), "分类列表应包含‘工作’");
+        assertTrue(categories.contains("日常"), "分类列表应包含'日常'");
+        assertTrue(categories.contains("工作"), "分类列表应包含'工作'");
         assertEquals(10, categories.size(), "验证默认分类数量应为10");
     }
 
+    //测试获取心情功能
     @Test
     void testGetMoods() {
         List<String> moods = manager.getMoods();
         assertFalse(moods.isEmpty(), "心情列表不应为空");
-        assertTrue(moods.contains("😊 开心"), "心情列表应包含‘😊 开心’");
-        assertTrue(moods.contains("😢 难过"), "心情列表应包含‘😢 难过’");
+        assertTrue(moods.contains("😊 开心"), "心情列表应包含'😊 开心'");
+        assertTrue(moods.contains("😢 难过"), "心情列表应包含'😢 难过'");
         assertEquals(10, moods.size(), "验证默认心情数量应为10");
     }
 }

@@ -55,6 +55,7 @@ public class LifeRecordTest {
 
         LifeRecord record = new LifeRecord(title, content, category, mood);
 
+        // 为了测试 toString，设置一个固定的时间戳，以便预期输出确定
         LocalDateTime fixedTimestamp = LocalDateTime.of(2024, 6, 25, 14, 0, 0);
         record.setTimestamp(fixedTimestamp);
 
@@ -96,6 +97,7 @@ public class LifeRecordTest {
         assertEquals(expectedToFileFormat, record.toFileFormat(), "toFileFormat() 输出格式应与预期一致");
     }
 
+    // 测试构造函数处理空字符串
     @Test
     void testConstructorWithEmptyStrings(){
         LifeRecord record = new LifeRecord("", "", "", "");
@@ -105,6 +107,7 @@ public class LifeRecordTest {
         assertEquals("", record.getMood());
     }
 
+    // 测试构造函数处理 null 字符串
     @Test
     void testConstructorWithNullStrings(){
         LifeRecord record = new LifeRecord(null, null, null, null);
