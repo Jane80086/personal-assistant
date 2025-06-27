@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class TodoListMenu {
     private Scanner scanner;
-    private List<TodoItem> todoList;
+    public List<TodoItem> todoList;
     private static final String FILE_PATH = "todo_list.txt";
 
     public TodoListMenu(Scanner scanner) {
@@ -47,7 +47,7 @@ public class TodoListMenu {
         } while (choice != 0);
     }
 
-    private void viewTodoList() {
+    public void viewTodoList() {
         List<TodoItem> activeTodoList = new ArrayList<>();
         for (TodoItem item : todoList) {
             if (!item.isCompleted()) {
@@ -88,7 +88,7 @@ public class TodoListMenu {
         } while (true);
     }
 
-    private String getStarString(int priority) {
+    public String getStarString(int priority) {
         StringBuilder stars = new StringBuilder();
         for (int i = 0; i < priority; i++) {
             stars.append("*");
@@ -96,7 +96,7 @@ public class TodoListMenu {
         return stars.toString();
     }
 
-    private void createTodoItem() {
+    public void createTodoItem() {
         System.out.print(" 请输入待办内容: ");
         String content = scanner.nextLine();
 
@@ -140,7 +140,7 @@ public class TodoListMenu {
         }
     }
 
-    private List<TodoItem> loadTodoList() {
+    public List<TodoItem> loadTodoList() {
         List<TodoItem> list = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
@@ -159,7 +159,7 @@ public class TodoListMenu {
         return list;
     }
 
-    private void saveTodoList() {
+    public void saveTodoList() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (TodoItem item : todoList) {
                 writer.write(item.getContent() + "," + item.getPriority() + "," + item.isCompleted());
