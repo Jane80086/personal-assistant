@@ -1,2 +1,4 @@
-白盒测试,2,false
+白盒测试,2,true
 烙饼,1,true
+白盒测试,3,false
+黑盒测试,2,false
