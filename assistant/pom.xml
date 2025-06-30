@@ -43,10 +43,11 @@
 
     <build>
         <plugins>
+            <!-- 临时禁用 JaCoCo 以避免 Java 21 兼容性警告
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
+                <version>0.8.11</version>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -63,6 +64,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
 </project>

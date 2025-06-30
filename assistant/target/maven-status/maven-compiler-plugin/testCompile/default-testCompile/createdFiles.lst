@@ -1,3 +1,9 @@
-com\example\life\LifeRecordTest.class
-com\example\life\LifeRecordManagerTest.class
-com\example\todolist\TodoListMenuComprehensiveTest.class
+com/example/payment/PaymentTestDataGenerator.class
+com/example/payment/PaymentBoundaryTest.class
+com/example/payment/PaymentPerformanceTest.class
+com/example/todolist/TodoListMenuComprehensiveTest.class
+com/example/life/LifeRecordManagerTest.class
+com/example/life/LifeRecordTest.class
+com/example/payment/PaymentRecordTest.class
+com/example/payment/PaymentIntegrationTest.class
+com/example/payment/PaymentRecordManagerTest.class
