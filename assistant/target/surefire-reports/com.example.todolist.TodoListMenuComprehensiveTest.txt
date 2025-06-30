@@ -1,0 +1,160 @@
+-------------------------------------------------------------------------------
+Test set: com.example.todolist.TodoListMenuComprehensiveTest
+-------------------------------------------------------------------------------
+Tests run: 18, Failures: 16, Errors: 0, Skipped: 0, Time elapsed: 0.146 sec <<< FAILURE!
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItem()  Time elapsed: 0.041 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItem(TodoListMenuComprehensiveTest.java:121)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemInvalidPriority()  Time elapsed: 0.003 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemInvalidPriority(TodoListMenuComprehensiveTest.java:129)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testLoadTodoListEmptyFile()  Time elapsed: 0.003 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testLoadTodoListEmptyFile(TodoListMenuComprehensiveTest.java:165)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListNonNumericSubInput()  Time elapsed: 0.002 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListNonNumericSubInput(TodoListMenuComprehensiveTest.java:104)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testDisplayMenuValidChoice()  Time elapsed: 0.02 sec  <<< FAILURE!
+java.util.NoSuchElementException: No line found
+	at java.base/java.util.Scanner.nextLine(Scanner.java:1651)
+	at com.example.TODOlist.TodoListMenu.displayMenu(TodoListMenu.java:29)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testDisplayMenuValidChoice(TodoListMenuComprehensiveTest.java:56)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListEmpty()  Time elapsed: 0 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListEmpty(TodoListMenuComprehensiveTest.java:83)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemMinPriority()  Time elapsed: 0 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemMinPriority(TodoListMenuComprehensiveTest.java:195)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testDisplayMenuInvalidChoice()  Time elapsed: 0.007 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testDisplayMenuInvalidChoice(TodoListMenuComprehensiveTest.java:65)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testDisplayMenuNonNumericInput()  Time elapsed: 0.003 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testDisplayMenuNonNumericInput(TodoListMenuComprehensiveTest.java:74)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListInvalidSubChoice()  Time elapsed: 0.002 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListInvalidSubChoice(TodoListMenuComprehensiveTest.java:97)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemMaxPriority()  Time elapsed: 0.002 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemMaxPriority(TodoListMenuComprehensiveTest.java:203)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListMarkAsCompleted()  Time elapsed: 0.012 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testViewTodoListMarkAsCompleted(TodoListMenuComprehensiveTest.java:90)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemInvalidSubChoice()  Time elapsed: 0.002 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemInvalidSubChoice(TodoListMenuComprehensiveTest.java:147)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemEmptyContent()  Time elapsed: 0.004 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemEmptyContent(TodoListMenuComprehensiveTest.java:187)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemNonNumericSubInput()  Time elapsed: 0.004 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemNonNumericSubInput(TodoListMenuComprehensiveTest.java:156)
+
+com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemNonNumericPriority()  Time elapsed: 0.004 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+	at com.example.todolist.TodoListMenuComprehensiveTest.testCreateTodoItemNonNumericPriority(TodoListMenuComprehensiveTest.java:138)
+

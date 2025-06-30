@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="0" failures="0" name="com.example.life.LifeRecordTest" time="0" errors="0" skipped="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="java.vm.version" value="17.0.10+11-LTS-240"/>
+    <property name="sun.boot.library.path" value="D:\jdk\bin"/>
+    <property name="maven.multiModuleProjectDirectory" value="D:\glowing\personal-assistant\assistant"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="path.separator" value=";"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="CN"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="D:\glowing\personal-assistant\assistant"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="java.runtime.version" value="17.0.10+11-LTS-240"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\locust\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="classworlds.conf" value="D:\dayishixun\Maven\apache-maven-3.8.8-bin\apache-maven-3.8.8\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="GBK"/>
+    <property name="java.library.path" value="D:\jdk\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\jincang\Kingbase\ES\V8\KESRealPro\V008R006C009B0014\Interface\compress\v8r6_compress_win\kb_x64\release;D:\jdk\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\EasyShare\x86\;C:\Program Files (x86)\EasyShare\x64\;C:\Program Files\Bandizip\;D:\dayishixun\Maven\apache-maven-3.8.8-bin\apache-maven-3.8.8\bin;D:\dayishixun\openjfx-21.0.2_windows-x64_bin-sdk\javafx-sdk-21.0.2\bin;D:\Git\cmd;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Users\locust\Downloads\Cangjie-vscode-0.53.18.tar.gz\cangjie-vscode-0.53.18;D:\androidSetting\AndroidSDK\tools;D:\androidSetting\AndroidSDK\platform-tools; ;D:\Scripts\;D:\;C:\Users\locust\AppData\Local\Microsoft\WindowsApps;C:\Users\locust\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\locust\.dotnet\tools;C:\Users\locust\root\bin;;D:\py\PyCharm Community Edition 2025.1.1.1\bin;;."/>
+    <property name="maven.conf" value="D:\dayishixun\Maven\apache-maven-3.8.8-bin\apache-maven-3.8.8/conf"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="java.class.version" value="61.0"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.0"/>
+    <property name="library.jansi.path" value="D:\dayishixun\Maven\apache-maven-3.8.8-bin\apache-maven-3.8.8\lib\jansi-native"/>
+    <property name="user.home" value="C:\Users\locust"/>
+    <property name="user.timezone" value="Asia/Shanghai"/>
+    <property name="file.encoding" value="GBK"/>
+    <property name="java.specification.version" value="17"/>
+    <property name="user.name" value="locust"/>
+    <property name="java.class.path" value="D:\dayishixun\Maven\apache-maven-3.8.8-bin\apache-maven-3.8.8\boot\plexus-classworlds-2.6.0.jar"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean test"/>
+    <property name="java.home" value="D:\jdk"/>
+    <property name="user.language" value="zh"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.version" value="17.0.10"/>
+    <property name="native.encoding" value="GBK"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="sun.stderr.encoding" value="ms936"/>
+    <property name="maven.home" value="D:\dayishixun\Maven\apache-maven-3.8.8-bin\apache-maven-3.8.8"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.version.date" value="2024-01-16"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.stdout.encoding" value="ms936"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+</testsuite>
